@@ -8,9 +8,9 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
-      - icon: twitter
-        href: https://twitter.com
+        href: https://github.com/priyankanair2001/
+      - icon: instagram
+        href: https://www.instagram.com/hokiepriya/
 format:
   html:
     theme: cosmo
