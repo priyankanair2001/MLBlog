@@ -1,13 +1,58 @@
 ---
 title: "Post With Code"
-author: "Harlow Malloc"
+author: "Priyanka Nair"
 date: "2023-11-07"
 categories: [news, code, help]
 image: "image.jpg"
+jupyter:
+  jupytext:
+    formats: 'qmd:quarto,py:percent,md,ipynb'
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.15.2
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
 ---
 
 This is a post with executable code.
 
-```{r}
-1 + 1
+```{python}
+#| echo: false
+#| output: false
+import warnings
+
+warnings.filterwarnings("ignore")
+```
+
+```{python}
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.set_theme(style="ticks")
+
+# Initialize the figure with a logarithmic x axis
+f, ax = plt.subplots(figsize=(7, 6))
+ax.set_xscale("log")
+
+# Load the example planets dataset
+planets = sns.load_dataset("planets")
+
+# Plot the orbital period with horizontal boxes
+sns.boxplot(
+    planets, x="distance", y="method", hue="method",
+    whis=[0, 100], width=.6, palette="vlag"
+)
+
+# Add in points to show each observation
+sns.stripplot(planets, x="distance", y="method", size=4, color=".3")
+
+# Tweak the visual presentation
+ax.xaxis.grid(True)
+ax.set(ylabel="")
+sns.despine(trim=True, left=True)
+
 ```
