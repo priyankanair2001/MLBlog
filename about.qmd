@@ -5,14 +5,14 @@ about:
   template: jolla
   links:
     - icon: instagram
-      text: Twitter
-      href: https://twitter.com
+      text: Instagram
+      href: https://www.instagram.com/hokiepriya/
     - icon: linkedin
       text: LinkedIn
-      href: https://linkedin.com
+      href: https://www.linkedin.com/in/priyankamnair
     - icon: github
       text: Github
-      href: https://github.com
+      href: https://github.com/priyankanair2001/
 ---
 
 About this blog
