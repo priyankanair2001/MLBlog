@@ -4,7 +4,7 @@ image: profile.jpg
 about:
   template: jolla
   links:
-    - icon: twitter
+    - icon: instagram
       text: Twitter
       href: https://twitter.com
     - icon: linkedin
@@ -13,7 +13,6 @@ about:
     - icon: github
       text: Github
       href: https://github.com
-
 ---
 
 About this blog
