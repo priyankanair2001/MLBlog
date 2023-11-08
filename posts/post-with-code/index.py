@@ -106,3 +106,4 @@ visualizer.show()                     # Finalize and render the figure
 
 # %% [markdown]
 # This is a change to the markdown text.
+
