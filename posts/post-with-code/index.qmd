@@ -9,11 +9,38 @@ image: "image.jpg"
 This is a post with executable code.
 
 ```{python}
-5*7
+# importing the required module  
+import matplotlib.pyplot as plt  
+    
+# x axis values  
+x = [1,2,3]  
+# corresponding y axis values  
+y = [2,4,1]  
+    
+# plotting the points   
+plt.plot(x, y)  
+    
+# naming the x axis  
+plt.xlabel('x - axis')  
+# naming the y axis  
+plt.ylabel('y - axis')  
+    
+# giving a title to my graph  
+plt.title('My first graph!')  
+    
+# function to show the plot  
+plt.show() 
     
 ```
 
 ```{python}
-5+6
+from yellowbrick.datasets import load_concrete
+from yellowbrick.features import JointPlotVisualizer
+# Load the dataset
+X, y = load_concrete()
+# Instantiate the visualizer
+visualizer = JointPlotVisualizer(columns="cement")
+visualizer.fit_transform(X, y)        # Fit and transform the data
+visualizer.show()                     # Finalize and render the figure
 
 ```
