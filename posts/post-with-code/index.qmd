@@ -4,18 +4,6 @@ author: "Priyanka Nair"
 date: "2023-11-07"
 categories: [news, code, help]
 image: "image.jpg"
-jupyter:
-  jupytext:
-    formats: 'qmd:quarto,py:percent,md,ipynb'
-    text_representation:
-      extension: .qmd
-      format_name: quarto
-      format_version: '1.0'
-      jupytext_version: 1.15.2
-  kernelspec:
-    display_name: Python 3 (ipykernel)
-    language: python
-    name: python3
 ---
 
 This is a post with executable code.
