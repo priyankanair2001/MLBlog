@@ -13,7 +13,7 @@ website:
         href: https://www.instagram.com/hokiepriya/
 format:
   html:
-    theme: cosmo
+    theme: theme.scss
     css: styles.css
 
 editor: visual
