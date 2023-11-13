@@ -1,46 +1,67 @@
 ---
-title: "Post With Code"
+title: "Precision-Recall Curves"
 author: "Priyanka Nair"
-date: "2023-11-07"
-categories: [news, code, help]
-image: "image.jpg"
+date: "2023-11-13"
+categories: [Classification]
 ---
 
-This is a post with executable code.
+Hello! In this blog post, I will be teaching you about precision-recall curves. A precision-recall curve can help us measure the quality of our model. So you may be wondering... what exactly are precision and recall?
+
+Precision: true positives / all positives
+
+Remember, all positives are true positives + false positives
+
+Recall: true positives / (true positives + false negatives)
+
+So, you can think of precision as measuring how many selected items were relevant, and recall as how many relevant items are selected.
+
+Precision and recall trade off. Increased precision leads to decreased recall and increased recall leads to decreased precision.
+
+Now, I will explain something really important: how do we read a graph with a precision-recall curve?
+
+Basically, we want both precision and recall to be as high as possible. Since precision is on the y-axis and recall is on the x-axis, the higher the points are on the graph, the more precision they indicate, and the farther right the points are, the more recall they indicate. Therefore, we want our curve to be as close to the top right corner of the graph as possible. As a result, the area under the curve should also be as high as possible.
+
+To illustrate how precision-recall curves are used, I will provide an example.
+
+A precision-recall curve can be very useful in the real world, especially in the medical field for detecting illnesses such as breast cancer. Here, we will use sklearn's breast cancer dataset, where a tumor will be classified as either malignant (1) or benign (0). As usual, our PR-curve will show us how good our model is.
 
 ```{python}
-# importing the required module  
-import matplotlib.pyplot as plt  
-    
-# x axis values  
-x = [1,2,3]  
-# corresponding y axis values  
-y = [2,4,1]  
-    
-# plotting the points   
-plt.plot(x, y)  
-    
-# naming the x axis  
-plt.xlabel('x - axis')  
-# naming the y axis  
-plt.ylabel('y - axis')  
-    
-# giving a title to my graph  
-plt.title('My first graph!')  
-    
-# function to show the plot  
-plt.show() 
-    
-```
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import precision_recall_curve, auc
 
-```{python}
-from yellowbrick.datasets import load_concrete
-from yellowbrick.features import JointPlotVisualizer
-# Load the dataset
-X, y = load_concrete()
-# Instantiate the visualizer
-visualizer = JointPlotVisualizer(columns="cement")
-visualizer.fit_transform(X, y)        # Fit and transform the data
-visualizer.show()                     # Finalize and render the figure
+# Load the Breast Cancer dataset
+cancer = load_breast_cancer()
+X = cancer.data
+y = cancer.target  # 1 if malignant, 0 if benign
 
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a logistic regression model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Predict probabilities on the test set
+y_scores = model.predict_proba(X_test)[:, 1]
+
+# Calculate precision and recall
+precision, recall, thresholds = precision_recall_curve(y_test, y_scores)
+
+# Calculate the area under the precision-recall curve
+auc_score = auc(recall, precision)
+
+# Plot the precision-recall curve
+plt.figure(figsize=(8, 6))
+plt.plot(recall, precision, color='purple', label=f'PR Curve (AUC = {auc_score:.2f})')
+plt.xlabel('Recall')
+plt.ylabel('Precision')
+plt.title('Precision-Recall Curve for Breast Cancer Classification')
+plt.legend()
+plt.show()
+
+    
 ```

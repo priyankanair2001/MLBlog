@@ -15,4 +15,4 @@ about:
       href: https://github.com/priyankanair2001/
 ---
 
-Hello, my name is Priyanka Nair, but you can call me Priya. I graduated from Virginia Tech with a Bachelor's in Computer Science in May 2023. I am currently working towards my Master's in Computer Science. This blog is to showcase what I've learned in my Machine Learning class.
+Hello, my name is Priyanka Nair, but you can call me Priya. I graduated from Virginia Tech with a Bachelor's in Computer Science in May 2023. I am currently working towards my Master's in Computer Science. This blog is to showcase what I've learned in my Machine Learning class. My favorite color is (obviously) purple.
