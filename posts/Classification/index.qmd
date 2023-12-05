@@ -26,6 +26,8 @@ To illustrate how precision-recall curves are used, I will provide an example.
 A precision-recall curve can be very useful in the real world, especially in the medical field for detecting illnesses such as breast cancer. Here, we will use sklearn's breast cancer dataset, where a tumor will be classified as either malignant (1) or benign (0). As usual, our PR-curve will show us how good our model is.
 
 ```{python}
+import warnings
+warnings.filterwarnings("ignore")
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_breast_cancer
@@ -65,3 +67,54 @@ plt.show()
 
     
 ```
+
+As you can see from this graph, our model seems to be quite good, as our AUC (Area Under the Curve) score is high. Here is an example of model that has a PR-Curve with a low AUC curve:
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import precision_recall_curve, auc
+
+# Generate a synthetic dataset with increased class imbalance
+X, y = make_classification(
+    n_samples=1000, n_features=20, n_classes=2, n_clusters_per_class=1,
+    weights=[0.95, 0.05], flip_y=0, random_state=42
+)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a logistic regression classifier
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Predict probabilities on the test set
+y_scores = model.predict_proba(X_test)[:, 1]
+
+# Calculate precision and recall
+precision, recall, thresholds = precision_recall_curve(y_test, y_scores)
+
+# Calculate the area under the precision-recall curve
+auc_score = auc(recall, precision)
+
+# Plot the precision-recall curve
+plt.figure(figsize=(8, 6))
+plt.plot(recall, precision, color='purple', label=f'PR Curve (AUC = {auc_score:.2f})')
+plt.xlabel('Recall')
+plt.ylabel('Precision')
+plt.title('Example Precision-Recall Curve with Increased Class Imbalance')
+plt.legend()
+plt.show()
+
+```
+
+This code uses a class imbalance in order to lower the AUC score. It basically is data that can represent something to be classified and something that does not fall under that classification(i.e.: spam vs not spam). Class imbalance refers to a situation in a classification problem where the distribution of examples across different classes is not equal. In other words, one class has significantly more instances than the other class or classes. Class imbalance is common in many real-world datasets.
+
+For example, consider a binary classification problem where you want to predict whether an email is spam or not. If 95% of the emails are not spam and only 5% are spam, the dataset is said to have class imbalance.
+
+In some cases, a higher class imbalance might lead to a higher AUC-PR, especially if the model is able to correctly identify the minority class instances (high recall) while maintaining high precision. In such cases, the model can effectively separate the minority class from the majority class, resulting in a better AUC-PR.
+
+However, in highly imbalanced scenarios, achieving both high precision and high recall can be challenging. The model might be biased towards the majority class, leading to high precision for the majority class but potentially low recall for the minority class.
