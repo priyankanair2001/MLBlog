@@ -1,0 +1,72 @@
+---
+title: "Isolation Forests"
+author: "Priyanka Nair"
+date: "2023-12-04"
+categories: [Anomaly/Outlier Detection]
+---
+
+Hi everyone! In this post we will be going over anomaly and outlier detection. We will be going over how we can use isolation forests for anomaly detection.
+
+So first, let's go over what anomaly detection is. Anomaly detection is when you have a group of points and you want to find the points that do not align or belong to the rest of the points. These points will stand out from the rest and be outliers. A real world example of using anomaly detection would be when you want to find fraudulant credit card transactions.
+
+Now, let's go over what isolation forests are. They are a variation of random forests that can be used specifically for anomaly detection. To recap what random forests are, they are decision trees. Decision trees separate the data one at a time until each part in homogeneous. They can be used for classification purposes. Isolation trees also separate data, but not into groups. They instead isolate each data point. The way isolation forests can work to detect anomalies is that when they separate each point, the points that take the least amount of separations are more likely to be anomalies. This is because when there are other points nearby a point, there is a high chance that points will be in the same partitioned areas as other points, unless you keep partitioning an area such that it becomes only large enough to fit one point.
+
+In the algorithm, isolation forests build a forest of isolation trees. What happens is that for each point we have to build an isolation tree until each point is separated.
+
+When we predict the anomalies, we have a formula to give each point an "anomaly score".
+
+![](images/Screenshot 2023-12-06 at 11.17.04 AM.png){width="226"}
+
+Variables:
+
+x: new point
+
+m: sample size
+
+s(x,m) : anomaly score
+
+h(x): average search height of x from isolation trees
+
+c(m): average value of h(x)
+
+E(h(x)) : average path length of multiple isolation trees
+
+The smaller the anomaly score, the more likely the instance is considered an anomaly.
+
+In the example of code shown below, we have a dataset with regular data and outliers as can be seen in the first graph. Our isolation forests algorithm will try to detect the the anomalies:\
+
+```{python}
+# Import necessary libraries
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.ensemble import IsolationForest
+
+# Generate synthetic data with outliers
+np.random.seed(42)
+normal_data = np.random.normal(loc=0, scale=1, size=(1000, 2))
+outliers = np.random.uniform(low=-10, high=10, size=(50, 2))
+data = np.vstack([normal_data, outliers])
+
+# Visualize the data
+plt.scatter(data[:, 0], data[:, 1], s=5, label='Normal Data')
+plt.scatter(outliers[:, 0], outliers[:, 1], s=20, color='red', label='Outliers')
+plt.title('Synthetic Data with Outliers')
+plt.legend()
+plt.show()
+
+# Apply Isolation Forest for anomaly detection
+clf = IsolationForest(contamination=0.05)  # Adjust the contamination parameter based on the expected outlier proportion
+clf.fit(data)
+
+# Predict outliers
+predictions = clf.predict(data)
+
+# Visualize the results
+plt.scatter(data[:, 0], data[:, 1], s=5, c=predictions, cmap='viridis')
+plt.title('Isolation Forest Anomaly Detection Results')
+plt.show()
+
+
+```
+
+Our algorithm managed to mostly predict the points that were clearly outliers. However, it had a little bit of trouble with points that close to or in the center cluster.

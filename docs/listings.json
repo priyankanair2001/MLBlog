@@ -2,8 +2,9 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/welcome/index.html",
-      "/posts/post-with-code/index.html"
+      "/posts/Anomaly Detection/index.html",
+      "/posts/Clustering/index.html",
+      "/posts/Classification/index.html"
     ]
   }
 ]
