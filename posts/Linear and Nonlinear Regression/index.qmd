@@ -1,0 +1,122 @@
+---
+title: "Linear and Nonlinear Regression"
+author: "Priyanka Nair"
+date: "2023-12-06"
+categories: [Linear and Nonlinear Regression]
+---
+
+Hello, and welcome to my latest blog post on Machine Learning. Today, we will be talking about linear and non-linear regression. First we will be going over linear regression.
+
+It's important for machine learning algorithms to be able to predict a certain metric given that it is correlated with another metric. For example, given a person's height, a machine learning model may be able to (roughly) predict their weight.
+
+Finding the right function to prediction one variable (y) from another (x) is known as regression. It's easiest to assume that the function is linear, hence where we get "linear regression".
+
+We've all learned about the formula y = mx+b. The goal of linear regression is to find the m and b values that will create a line that will fit the data the best.
+
+![](images/Screenshot 2023-12-06 at 3.59.13 PM.png){width="198"}
+
+In order to assess the "fit" of the line, we can take the difference of where a point is and where it should be according to the line, and square that value and take the sum of this value for all data points.
+
+![](images/Screenshot 2023-12-06 at 4.00.18 PM.png){width="198"}
+
+To find out m and b in the y = mx+b formula from here, we can take the gradient of the sum value equation discussed in the previous paragraph, set it to zero, and then solve for m and b (also sometimes known as alpha and beta).
+
+![](images/Screenshot 2023-12-06 at 7.12.10 PM.png){width="221"}
+
+![](images/Screenshot 2023-12-06 at 7.13.14 PM.png){width="222"}
+
+Obviously, we do not have to do all of this math by hand, as we can simply use Python and its libraries to do the work for us. All we have to do (as seen in the code example below) is import scikit learn, declare a linear regression model, feed it the training data, and call the fit function.
+
+```{python}
+import warnings
+warnings.filterwarnings("ignore")
+# Import necessary libraries
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Generate some example data
+np.random.seed(42)
+X = 2 * np.random.rand(100, 1)
+y = 4 + 3 * X + np.random.randn(100, 1)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a linear regression model
+model = LinearRegression()
+
+# Train the model on the training set
+model.fit(X_train, y_train)
+
+# Make predictions on the testing set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print(f"Mean Squared Error: {mse}")
+
+# Plot the results
+plt.scatter(X_test, y_test, color='black')
+plt.plot(X_test, y_pred, color='purple', linewidth=3)
+plt.xlabel('X')
+plt.ylabel('y')
+plt.title('Linear Regression Example')
+plt.show()
+
+```
+
+Now we will move on to non-linear regression. As you may have guessed based on it's name, non-linear regression is similar to linear regression except instead of producing a line of best fit for the data points, it produces a curve of a different shape that accurately matches the trajectory of the data points.
+
+There are different types of non-linear regression including polynomial regression, which consists of quadratic and cubic regressions. Exponential and logarithmic regressions exist as well.
+
+```{python}
+import warnings
+warnings.filterwarnings("ignore")
+# Import necessary libraries
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Generate some example data with a non-linear relationship
+np.random.seed(42)
+X = 6 * np.random.rand(100, 1) - 3
+y = 0.5 * X**2 + X + 2 + np.random.randn(100, 1)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Apply polynomial features
+poly_features = PolynomialFeatures(degree=2, include_bias=False)
+X_poly_train = poly_features.fit_transform(X_train)
+X_poly_test = poly_features.transform(X_test)
+
+# Create a linear regression model
+model = LinearRegression()
+
+# Train the model on the polynomial features
+model.fit(X_poly_train, y_train)
+
+# Make predictions on the testing set
+y_pred = model.predict(X_poly_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print(f"Mean Squared Error: {mse}")
+
+# Plot the results
+plt.scatter(X_test, y_test, color='black')
+plt.scatter(X_test, y_pred, color='purple', marker='x')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.title('Polynomial Regression Example')
+plt.show()
+
+```
+
+Thank you to ChatGPT for the code and YouTube tutorials https://www.youtube.com/watch?v=CtsRRUddV2s and https://www.youtube.com/watch?v=av4zxt2bV6A for teaching me.

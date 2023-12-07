@@ -62,3 +62,5 @@ plt.show()
 ```
 
 In this example, we can see data points that in our eyes are clearly belonging to three different clusters. However, the computer does not know that and has to go through the steps to identify the centroids shown in the bottom graph.
+
+Thank you to ChatGPT for the code and YouTube tutorials https://www.youtube.com/watch?v=4b5d3muPQmA and https://www.youtube.com/watch?v=R2e3Ls9H_fc for teaching me about this topic!

@@ -1,0 +1,62 @@
+---
+title: "Gaussian Mixture Models (GMMs)"
+author: "Priyanka Nair"
+date: "2023-12-06"
+categories: [Probability Theory and Random Variables]
+---
+
+Hi! In this post, we will discuss about the applications of probability theory and random variables in Machine Learning. For our example, we will be exploring how the Gaussian Mixtures clustering algorithm can generate n x k cluster label probabilities.
+
+To start off, I will be teaching you about Gaussian Mixture Models(GMMs). In a previous post, I taught you about the K-Means clustering algorithm. GMMs are also used for clustering. However, a key difference between these two is that K-means assigns it's data points to the cluster of its nearest neighbors, while GMMs use a probabilistic approach of clustering in the sense that it will tell you the probability of a certain data point belonging to a certain cluster.
+
+When you want to use a GMM, if you have a single cluster, it is easy to simply put a GMM on top of this clusters. However, when we have multiple clusters, we need more GMMs (one for each cluster).
+
+To find the best possible fit for our Gaussians, we can use something called the expectation-maximization algorithm. It helps estimate parameters in statistical models where data is incomplete. It consists of two steps:
+
+The Expectation Step helps it calculate the value of the function given the current parameter estimates
+
+The Maximization Step updates the parameters estimates to maximize what was calculated in the expectation step
+
+When we alternate between these two steps, we will be able to refine our parameter estimates.
+
+Initially, this will give us an idea of where each Gaussian should be centered, how their covariance should look, and how much weight should be provided to each Gaussian in the final distribution.
+
+The overall GMM probability is equivalent to the sum of all Gaussians for which we want to add up the weight of each Gaussian and multiple it by the probability of that Gaussian.
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.mixture import GaussianMixture
+from sklearn.datasets import make_blobs
+
+# Generate synthetic data with three clusters
+X, y = make_blobs(n_samples=300, centers=3, random_state=42)
+
+# Fit a Gaussian Mixture Model
+gmm = GaussianMixture(n_components=3)
+gmm.fit(X)
+
+# Predict cluster labels and probabilities
+labels = gmm.predict(X)
+probs = gmm.predict_proba(X)
+
+# Plot the data points with colors representing predicted clusters
+plt.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis', s=50, edgecolors='k')
+
+# Plot the cluster centers
+plt.scatter(gmm.means_[:, 0], gmm.means_[:, 1], marker='x', s=200, linewidths=3, color='r', label='Cluster Centers')
+
+plt.title('Gaussian Mixture Model')
+plt.legend()
+plt.show()
+
+# Display cluster label probabilities for the first few data points
+print("Cluster Label Probabilities:")
+print(probs[:5])
+
+
+```
+
+This is an example of a GMM and its cluster label probabilities.
+
+Thank you to ChatGPT for the code and YouTube tutorial https://www.youtube.com/watch?v=wT2yLNUfyoM for teaching me about this topic!

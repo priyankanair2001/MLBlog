@@ -118,3 +118,5 @@ For example, consider a binary classification problem where you want to predict 
 In some cases, a higher class imbalance might lead to a higher AUC-PR, especially if the model is able to correctly identify the minority class instances (high recall) while maintaining high precision. In such cases, the model can effectively separate the minority class from the majority class, resulting in a better AUC-PR.
 
 However, in highly imbalanced scenarios, achieving both high precision and high recall can be challenging. The model might be biased towards the majority class, leading to high precision for the majority class but potentially low recall for the minority class.
+
+Thank you to ChatGPT for the code and YouTube tutorial https://www.youtube.com/watch?v=-zwanhruRHE for teaching me.

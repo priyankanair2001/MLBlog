@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/Linear and Nonlinear Regression/index.html",
+      "/posts/Probability Theory and Random Variables/index.html",
       "/posts/Anomaly Detection/index.html",
       "/posts/Clustering/index.html",
       "/posts/Classification/index.html"

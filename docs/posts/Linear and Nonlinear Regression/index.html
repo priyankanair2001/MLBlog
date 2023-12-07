@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Priyanka Nair">
-<meta name="dcterms.date" content="2023-12-02">
+<meta name="dcterms.date" content="2023-12-06">
 
-<title>priyankanairmlblog - K-Means Clustering</title>
+<title>priyankanairmlblog - Linear and Nonlinear Regression</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -142,9 +142,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">K-Means Clustering</h1>
+      <h1 class="title">Linear and Nonlinear Regression</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">Clustering</div>
+                <div class="quarto-category">Linear and Nonlinear Regression</div>
               </div>
                   </div>
   </div>
@@ -162,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">December 2, 2023</p>
+        <p class="date">December 6, 2023</p>
       </div>
     </div>
     
@@ -180,59 +180,116 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>Hello, in this blog post, we will be discussing k-means clustering. The idea behind k-means is to group similar data points together into a predefined number of clusters. You can tell which points are more or less similar to each other depending on how far apart they are. As you may have guessed, the closer the data points are to each other, the more similar they are.</p>
-<p>Each data point can be thought of as a point on a graph, such that you can use the distance formula to find out how far apart two points are from one another.</p>
-<p>“Centroids” are the center of each cluster. It is not a data point.</p>
-<p>The way this algorithm works is that initially, a number of centroids will be assigned. Then, each data point will be assigned a centroid. After that, the centroid will shift it’s position to the middle of all the data points that got assigned to it. This new centroid position can be calculated by finding the mean position of the data points that got assigned to it. Then, the data points will be reassigned to the centroid that it is now closest to. This process will keep iterating until the data points stop getting assigned to a different centroid and the centroids stop shifting.</p>
-<p>Even though with our own eyes we can likely distinguish different clusters in a dataset, the point of K-means clustering is for a computer to do that. The first step is to identify the number of clusters we want in our data. This is the “K” in K-means clustering.</p>
-<p>Sometimes, even when the centroid-shifting iteration process ends, it is possible that we may end up with clusters that do not match what our eyes would tell us. We can assess the quality of the clustering by adding up the variation within each cluster. Variance is a statistical measure that quantifies the degree of spread or dispersion in a set of data points. Since K-means can’t see the clustering the way we don’t, it keeps track of the variance and starts the whole process over with different starting points.</p>
-<p>After K-means has created clusters, it will choose the cluster with the best variance.</p>
-<p>When selecting the value for K, there are different methods. One method is trial and error. After trying a few different values for K, we can identify the best one by looking at the total variations and seeing which number has the highest total variation.</p>
-<p>It is important to note that even when K-means has reach its ideal values, it may not stop iterating until it’s “sure”.</p>
+<p>Hello, and welcome to my latest blog post on Machine Learning. Today, we will be talking about linear and non-linear regression. First we will be going over linear regression.</p>
+<p>It’s important for machine learning algorithms to be able to predict a certain metric given that it is correlated with another metric. For example, given a person’s height, a machine learning model may be able to (roughly) predict their weight.</p>
+<p>Finding the right function to prediction one variable (y) from another (x) is known as regression. It’s easiest to assume that the function is linear, hence where we get “linear regression”.</p>
+<p>We’ve all learned about the formula y = mx+b. The goal of linear regression is to find the m and b values that will create a line that will fit the data the best.</p>
+<p><img src="images/Screenshot 2023-12-06 at 3.59.13 PM.png" class="img-fluid" width="198"></p>
+<p>In order to assess the “fit” of the line, we can take the difference of where a point is and where it should be according to the line, and square that value and take the sum of this value for all data points.</p>
+<p><img src="images/Screenshot 2023-12-06 at 4.00.18 PM.png" class="img-fluid" width="198"></p>
+<p>To find out m and b in the y = mx+b formula from here, we can take the gradient of the sum value equation discussed in the previous paragraph, set it to zero, and then solve for m and b (also sometimes known as alpha and beta).</p>
+<p><img src="images/Screenshot 2023-12-06 at 7.12.10 PM.png" class="img-fluid" width="221"></p>
+<p><img src="images/Screenshot 2023-12-06 at 7.13.14 PM.png" class="img-fluid" width="222"></p>
+<p>Obviously, we do not have to do all of this math by hand, as we can simply use Python and its libraries to do the work for us. All we have to do (as seen in the code example below) is import scikit learn, declare a linear regression model, feed it the training data, and call the fit function.</p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import necessary libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Import necessary libraries</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_blobs</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create synthetic data with three clusters</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> make_blobs(n_samples<span class="op">=</span><span class="dv">300</span>, centers<span class="op">=</span><span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">42</span>, cluster_std<span class="op">=</span><span class="fl">1.0</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the data</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>plt.scatter(X[:, <span class="dv">0</span>], X[:, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'purple'</span>, s<span class="op">=</span><span class="dv">30</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Synthetic Data with 3 Clusters"</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Feature 1"</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Feature 2"</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply K-means clustering with k=3</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>kmeans <span class="op">=</span> KMeans(n_clusters<span class="op">=</span><span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>kmeans.fit(X)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Get cluster centers and labels</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>centers <span class="op">=</span> kmeans.cluster_centers_</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> kmeans.labels_</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate some example data</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> np.random.rand(<span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="dv">4</span> <span class="op">+</span> <span class="dv">3</span> <span class="op">*</span> X <span class="op">+</span> np.random.randn(<span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the data into training and testing sets</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a linear regression model</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LinearRegression()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the model on the training set</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Make predictions on the testing set</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the clustered data</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>plt.scatter(X[:, <span class="dv">0</span>], X[:, <span class="dv">1</span>], c<span class="op">=</span>labels, s<span class="op">=</span><span class="dv">30</span>, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>plt.scatter(centers[:, <span class="dv">0</span>], centers[:, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'red'</span>, marker<span class="op">=</span><span class="st">'X'</span>, s<span class="op">=</span><span class="dv">200</span>, label<span class="op">=</span><span class="st">'Centroids'</span>)</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"K-means Clustering"</span>)</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Feature 1"</span>)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Feature 2"</span>)</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<p><img src="index_files/figure-html/cell-2-output-1.png" width="596" height="449"></p>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the model</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>mse <span class="op">=</span> mean_squared_error(y_test, y_pred)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean Squared Error: </span><span class="sc">{</span>mse<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the results</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>plt.scatter(X_test, y_test, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>plt.plot(X_test, y_pred, color<span class="op">=</span><span class="st">'purple'</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'X'</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'y'</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Linear Regression Example'</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Mean Squared Error: 0.6536995137170021</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="index_files/figure-html/cell-2-output-2.png" width="596" height="449"></p>
+<p><img src="index_files/figure-html/cell-2-output-2.png" width="585" height="449"></p>
 </div>
 </div>
-<p>In this example, we can see data points that in our eyes are clearly belonging to three different clusters. However, the computer does not know that and has to go through the steps to identify the centroids shown in the bottom graph.</p>
-<p>Thank you to ChatGPT for the code and YouTube tutorials https://www.youtube.com/watch?v=4b5d3muPQmA and https://www.youtube.com/watch?v=R2e3Ls9H_fc for teaching me about this topic!</p>
+<p>Now we will move on to non-linear regression. As you may have guessed based on it’s name, non-linear regression is similar to linear regression except instead of producing a line of best fit for the data points, it produces a curve of a different shape that accurately matches the trajectory of the data points.</p>
+<p>There are different types of non-linear regression including polynomial regression, which consists of quadratic and cubic regressions. Exponential and logarithmic regressions exist as well.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Import necessary libraries</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> PolynomialFeatures</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate some example data with a non-linear relationship</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="dv">6</span> <span class="op">*</span> np.random.rand(<span class="dv">100</span>, <span class="dv">1</span>) <span class="op">-</span> <span class="dv">3</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> X<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> X <span class="op">+</span> <span class="dv">2</span> <span class="op">+</span> np.random.randn(<span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the data into training and testing sets</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply polynomial features</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>poly_features <span class="op">=</span> PolynomialFeatures(degree<span class="op">=</span><span class="dv">2</span>, include_bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>X_poly_train <span class="op">=</span> poly_features.fit_transform(X_train)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>X_poly_test <span class="op">=</span> poly_features.transform(X_test)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a linear regression model</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LinearRegression()</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the model on the polynomial features</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>model.fit(X_poly_train, y_train)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Make predictions on the testing set</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_poly_test)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the model</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>mse <span class="op">=</span> mean_squared_error(y_test, y_pred)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean Squared Error: </span><span class="sc">{</span>mse<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the results</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>plt.scatter(X_test, y_test, color<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>plt.scatter(X_test, y_pred, color<span class="op">=</span><span class="st">'purple'</span>, marker<span class="op">=</span><span class="st">'x'</span>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'X'</span>)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'y'</span>)</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Polynomial Regression Example'</span>)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Mean Squared Error: 0.6358406072820808</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-3-output-2.png" width="576" height="449"></p>
+</div>
+</div>
+<p>Thank you to ChatGPT for the code and YouTube tutorials https://www.youtube.com/watch?v=CtsRRUddV2s and https://www.youtube.com/watch?v=av4zxt2bV6A for teaching me.</p>
 
 
 

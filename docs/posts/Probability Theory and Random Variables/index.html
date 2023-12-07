@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Priyanka Nair">
-<meta name="dcterms.date" content="2023-12-04">
+<meta name="dcterms.date" content="2023-12-06">
 
-<title>priyankanairmlblog - Isolation Forests</title>
+<title>priyankanairmlblog - Gaussian Mixture Models (GMMs)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -142,9 +142,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Isolation Forests</h1>
+      <h1 class="title">Gaussian Mixture Models (GMMs)</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">Anomaly/Outlier Detection</div>
+                <div class="quarto-category">Probability Theory and Random Variables</div>
               </div>
                   </div>
   </div>
@@ -162,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">December 4, 2023</p>
+        <p class="date">December 6, 2023</p>
       </div>
     </div>
     
@@ -180,61 +180,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>Hi everyone! In this post we will be going over anomaly and outlier detection. We will be going over how we can use isolation forests for anomaly detection.</p>
-<p>So first, let’s go over what anomaly detection is. Anomaly detection is when you have a group of points and you want to find the points that do not align or belong to the rest of the points. These points will stand out from the rest and be outliers. A real world example of using anomaly detection would be when you want to find fraudulant credit card transactions.</p>
-<p>Now, let’s go over what isolation forests are. They are a variation of random forests that can be used specifically for anomaly detection. To recap what random forests are, they are decision trees. Decision trees separate the data one at a time until each part in homogeneous. They can be used for classification purposes. Isolation trees also separate data, but not into groups. They instead isolate each data point. The way isolation forests can work to detect anomalies is that when they separate each point, the points that take the least amount of separations are more likely to be anomalies. This is because when there are other points nearby a point, there is a high chance that points will be in the same partitioned areas as other points, unless you keep partitioning an area such that it becomes only large enough to fit one point.</p>
-<p>In the algorithm, isolation forests build a forest of isolation trees. What happens is that for each point we have to build an isolation tree until each point is separated.</p>
-<p>When we predict the anomalies, we have a formula to give each point an “anomaly score”.</p>
-<p><img src="images/Screenshot 2023-12-06 at 11.17.04 AM.png" class="img-fluid" width="226"></p>
-<p>Variables:</p>
-<p>x: new point</p>
-<p>m: sample size</p>
-<p>s(x,m) : anomaly score</p>
-<p>h(x): average search height of x from isolation trees</p>
-<p>c(m): average value of h(x)</p>
-<p>E(h(x)) : average path length of multiple isolation trees</p>
-<p>The smaller the anomaly score, the more likely the instance is considered an anomaly.</p>
-<p>In the example of code shown below, we have a dataset with regular data and outliers as can be seen in the first graph. Our isolation forests algorithm will try to detect the the anomalies:<br>
-</p>
+<p>Hi! In this post, we will discuss about the applications of probability theory and random variables in Machine Learning. For our example, we will be exploring how the Gaussian Mixtures clustering algorithm can generate n x k cluster label probabilities.</p>
+<p>To start off, I will be teaching you about Gaussian Mixture Models(GMMs). In a previous post, I taught you about the K-Means clustering algorithm. GMMs are also used for clustering. However, a key difference between these two is that K-means assigns it’s data points to the cluster of its nearest neighbors, while GMMs use a probabilistic approach of clustering in the sense that it will tell you the probability of a certain data point belonging to a certain cluster.</p>
+<p>When you want to use a GMM, if you have a single cluster, it is easy to simply put a GMM on top of this clusters. However, when we have multiple clusters, we need more GMMs (one for each cluster).</p>
+<p>To find the best possible fit for our Gaussians, we can use something called the expectation-maximization algorithm. It helps estimate parameters in statistical models where data is incomplete. It consists of two steps:</p>
+<p>The Expectation Step helps it calculate the value of the function given the current parameter estimates</p>
+<p>The Maximization Step updates the parameters estimates to maximize what was calculated in the expectation step</p>
+<p>When we alternate between these two steps, we will be able to refine our parameter estimates.</p>
+<p>Initially, this will give us an idea of where each Gaussian should be centered, how their covariance should look, and how much weight should be provided to each Gaussian in the final distribution.</p>
+<p>The overall GMM probability is equivalent to the sum of all Gaussians for which we want to add up the weight of each Gaussian and multiple it by the probability of that Gaussian.</p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import necessary libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> IsolationForest</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.mixture <span class="im">import</span> GaussianMixture</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_blobs</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate synthetic data with outliers</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>normal_data <span class="op">=</span> np.random.normal(loc<span class="op">=</span><span class="dv">0</span>, scale<span class="op">=</span><span class="dv">1</span>, size<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">2</span>))</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>outliers <span class="op">=</span> np.random.uniform(low<span class="op">=-</span><span class="dv">10</span>, high<span class="op">=</span><span class="dv">10</span>, size<span class="op">=</span>(<span class="dv">50</span>, <span class="dv">2</span>))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.vstack([normal_data, outliers])</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the data</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>plt.scatter(data[:, <span class="dv">0</span>], data[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">5</span>, label<span class="op">=</span><span class="st">'Normal Data'</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>plt.scatter(outliers[:, <span class="dv">0</span>], outliers[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">'red'</span>, label<span class="op">=</span><span class="st">'Outliers'</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Synthetic Data with Outliers'</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply Isolation Forest for anomaly detection</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>clf <span class="op">=</span> IsolationForest(contamination<span class="op">=</span><span class="fl">0.05</span>)  <span class="co"># Adjust the contamination parameter based on the expected outlier proportion</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>clf.fit(data)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate synthetic data with three clusters</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> make_blobs(n_samples<span class="op">=</span><span class="dv">300</span>, centers<span class="op">=</span><span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a Gaussian Mixture Model</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>gmm <span class="op">=</span> GaussianMixture(n_components<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>gmm.fit(X)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict cluster labels and probabilities</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> gmm.predict(X)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>probs <span class="op">=</span> gmm.predict_proba(X)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data points with colors representing predicted clusters</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>plt.scatter(X[:, <span class="dv">0</span>], X[:, <span class="dv">1</span>], c<span class="op">=</span>labels, cmap<span class="op">=</span><span class="st">'viridis'</span>, s<span class="op">=</span><span class="dv">50</span>, edgecolors<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the cluster centers</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>plt.scatter(gmm.means_[:, <span class="dv">0</span>], gmm.means_[:, <span class="dv">1</span>], marker<span class="op">=</span><span class="st">'x'</span>, s<span class="op">=</span><span class="dv">200</span>, linewidths<span class="op">=</span><span class="dv">3</span>, color<span class="op">=</span><span class="st">'r'</span>, label<span class="op">=</span><span class="st">'Cluster Centers'</span>)</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict outliers</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> clf.predict(data)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the results</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>plt.scatter(data[:, <span class="dv">0</span>], data[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">5</span>, c<span class="op">=</span>predictions, cmap<span class="op">=</span><span class="st">'viridis'</span>)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Isolation Forest Anomaly Detection Results'</span>)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Gaussian Mixture Model'</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Display cluster label probabilities for the first few data points</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Cluster Label Probabilities:"</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(probs[:<span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="index_files/figure-html/cell-2-output-1.png" width="591" height="431"></p>
+<p><img src="index_files/figure-html/cell-2-output-1.png" width="577" height="431"></p>
 </div>
-<div class="cell-output cell-output-display">
-<p><img src="index_files/figure-html/cell-2-output-2.png" width="591" height="431"></p>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cluster Label Probabilities:
+[[1.35999675e-60 1.00000000e+00 5.79506157e-67]
+ [3.14154567e-60 1.00000000e+00 1.36438005e-64]
+ [1.72369478e-15 2.05865579e-51 1.00000000e+00]
+ [1.00000000e+00 1.71564500e-45 8.23076192e-24]
+ [9.85406873e-70 1.00000000e+00 1.20447754e-71]]</code></pre>
 </div>
 </div>
-<p>Our algorithm managed to mostly predict the points that were clearly outliers. However, it had a little bit of trouble with points that close to or in the center cluster.</p>
-<p>Thank you to ChatGPT for the code and YouTube tutorial https://www.youtube.com/watch?v=cRzeotaFDwk for teaching me.</p>
+<p>This is an example of a GMM and its cluster label probabilities.</p>
+<p>Thank you to ChatGPT for the code and YouTube tutorial https://www.youtube.com/watch?v=wT2yLNUfyoM for teaching me about this topic!</p>
 
 
 

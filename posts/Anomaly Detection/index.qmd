@@ -70,3 +70,5 @@ plt.show()
 ```
 
 Our algorithm managed to mostly predict the points that were clearly outliers. However, it had a little bit of trouble with points that close to or in the center cluster.
+
+Thank you to ChatGPT for the code and YouTube tutorial https://www.youtube.com/watch?v=cRzeotaFDwk for teaching me.
